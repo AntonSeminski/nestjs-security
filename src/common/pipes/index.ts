@@ -1,0 +1,1 @@
+export * from './entity-owner.pipe'
