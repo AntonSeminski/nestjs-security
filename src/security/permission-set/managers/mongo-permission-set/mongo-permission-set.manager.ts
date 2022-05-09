@@ -23,11 +23,9 @@ export class MongoPermissionSetManager extends MongoManager implements IPermissi
     async getAll(): Promise<PermissionSetDto[]> {
         const filter = this.createFilterWithType({})
 
-        const allPermissionSets = await this.permissionSetModel.find(
-            filter,
-            {},
-            {session: this.getSession()}
-        );
+        const allPermissionSets = await this.permissionSetModel
+            .find(filter)
+            .session(this.getSession());
 
         return allPermissionSets?.map(ps => new PermissionSetDto(ps));
     }
@@ -38,13 +36,9 @@ export class MongoPermissionSetManager extends MongoManager implements IPermissi
         const filter = this.createFilterWithType({name});
 
         const permissionSet = await this.permissionSetModel
-            .find(
-                filter,
-                {},
-                {session: this.getSession()}
-            )
-            .populate('assignees')
-            .session(this.getSession());
+            .findOne(filter)
+            ?.session(this.getSession())
+            ?.populate('assignees')
 
         return permissionSet == null ? null : new PermissionSetDto(permissionSet);
     }
@@ -54,11 +48,9 @@ export class MongoPermissionSetManager extends MongoManager implements IPermissi
 
         const filter = this.createFilterWithType({'assignees': userId});
 
-        const permissionSetsForUser = await this.permissionSetModel.find(
-            filter,
-            {},
-            {session: this.getSession()}
-        );
+        const permissionSetsForUser = await this.permissionSetModel
+            .find(filter)
+            .session(this.getSession());
 
         return permissionSetsForUser?.map(ps => new PermissionSetDto(ps));
     }
@@ -68,11 +60,9 @@ export class MongoPermissionSetManager extends MongoManager implements IPermissi
 
         const filter = this.createFilterWithType({'assignees': userId});
 
-        const permissionSetsForUser = await this.permissionSetModel.find(
-            filter,
-            {},
-            {session: this.getSession()}
-        );
+        const permissionSetsForUser = await this.permissionSetModel
+            .find(filter)
+            .session(this.getSession());
 
         return permissionSetsForUser.map(ps => ps._id.toString());
     }
