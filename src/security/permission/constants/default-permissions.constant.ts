@@ -1,4 +1,5 @@
 import {SystemPermissionNamesEnum} from "./system-permission-names.constant";
+import {PERMISSION_TYPES} from "./security.constants";
 
 export const DEFAULT_PERMISSIONS = [
     {

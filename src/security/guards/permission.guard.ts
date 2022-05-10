@@ -1,10 +1,8 @@
 import {CanActivate, ExecutionContext, Injectable, mixin} from "@nestjs/common";
-import {PermissionService} from "@asemin/nestjs-security";
-import {UserInfoDto} from "../../endpoints/inmost/auth/dto/user-info.dto";
-import {getAuthInfo} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from "@jira-killer/constants";
-import {throwException} from "@asemin/nestjs-utils";
-import {PermissionAssignmentService, PermissionService} from "@asemin/nestjs-security";
+import {PermissionAssignmentService} from "../permission-assignment";
+import {PermissionService, UserInfoDto} from "../permission";
+import {getAuthInfo, throwException} from "@asemin/nestjs-utils";
 
 export const PermissionGuard: any = (type: string, permissionName: string) => {
     @Injectable()

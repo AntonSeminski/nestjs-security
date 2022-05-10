@@ -4,9 +4,9 @@ import {Model} from 'mongoose';
 import {PermissionSetDto} from "../../../../entities";
 import {PermissionSet} from "../../../../entities";
 import {PermissionSetTypes} from "../../../../entities";
-import {ObjectService} from "../../../../common";
 import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
 import IPermissionSetManager from "../permission-set.manager.interface";
+import {ObjectService} from "../../../../services";
 
 export const MongoPermissionSetManagerMixin = (type?: PermissionSetTypes): any => {
 
