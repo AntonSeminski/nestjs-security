@@ -1,17 +1,15 @@
-import {Injectable, mixin} from '@nestjs/common';
-import IWorkspaceManager from './permission-set.manager.interface';
-import {MongoPermissionSetManager} from "./mongo-permission-set";
+import {Injectable, mixin} from "@nestjs/common";
+import {PermissionSetManager} from "../managers";
 import {PermissionSetDto, PermissionSetTypes} from "../../../entities";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from "@jira-killer/constants";
 
-export const PermissionSetManager = (type: PermissionSetTypes): any => {
-    class Manager extends MongoPermissionSetManager(type) {}
+export const PermissionSetProvider = (type: PermissionSetTypes): any => {
+    class Manager extends PermissionSetManager(type) {}
 
     @Injectable()
-    class PermissionSetManager implements IWorkspaceManager {
-        constructor(private permissionSetManager: Manager) {
-        }
+    class PermissionSetService {
+        constructor(private permissionSetManager: Manager) {}
 
         async getAll(): Promise<PermissionSetDto[]> {
             return this.permissionSetManager.getAll();
@@ -32,7 +30,7 @@ export const PermissionSetManager = (type: PermissionSetTypes): any => {
             return this.permissionSetManager.getByUserId(userId);
         }
 
-        getIdsByUserId(userId: string): Promise<String[]> {
+        async getIdsByUserId(userId: string): Promise<String[]> {
             if (!userId) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
                 method: 'getIdsByUserId',
                 params: {userId: userId}
@@ -49,7 +47,6 @@ export const PermissionSetManager = (type: PermissionSetTypes): any => {
 
             return this.permissionSetManager.create(permissionSet);
         }
-
 
         async assignUser(permissionSetId: string, userId: string): Promise<PermissionSetDto> {
             if (isHasEmpty(permissionSetId, userId)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
@@ -79,5 +76,5 @@ export const PermissionSetManager = (type: PermissionSetTypes): any => {
         }
     }
 
-    return mixin(PermissionSetManager)
+    return mixin(PermissionSetService);
 }

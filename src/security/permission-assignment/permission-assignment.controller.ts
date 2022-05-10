@@ -3,11 +3,11 @@ import {PermissionAssignmentService} from "./permission-assignment.provider";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {PermissionAssignmentDto} from "../../entities";
 import {WorkspaceAuthGuard} from "../../common";
-import {SharedTransactionManager} from "@asemin/nestjs-utils";
+import {InmostTransactionManager} from "@asemin/nestjs-utils";
 
 @ApiTags('PermissionAssignment')
 @UseGuards(WorkspaceAuthGuard)
-@UseInterceptors(SharedTransactionManager)
+@UseInterceptors(InmostTransactionManager)
 @Controller('permissionAssignment')
 export class PermissionAssignmentController {
     constructor(private permissionAssignmentService: PermissionAssignmentService) {}

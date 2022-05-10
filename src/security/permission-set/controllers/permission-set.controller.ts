@@ -1,20 +1,16 @@
 import {Body, Controller, Get, HttpStatus, Param, Post, UseInterceptors} from "@nestjs/common";
-import {PermissionSetService} from "./permission-set.provider";
-import {PermissionSetDto} from "../../entities/inmost/permission-set/pemrission-set.dto";
-import {PermissionSetAssignmentDto} from "./dtos/permission-set-assignment.dto";
-import {SetTypeInterceptor} from "./interceptors/set-type.interceptor";
-import {PermissionSetTypes} from "../../entities/inmost/permission-set/permissions-set.types";
+import {PermissionSetDto} from "../../../entities";
+import {PermissionSetAssignmentDto} from "../dtos";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {EntityOwnerPipe} from "../../common/pipes/entity-owner.pipe";
+import {EntityOwnerPipe} from "../../../common";
 import {InmostTransactionManager} from "@asemin/nestjs-utils";
+import {PermissionSetService} from "../services/permission-set.service";
 
 @ApiTags('UserPermissions / PermissionSet')
-@UseInterceptors(new SetTypeInterceptor(PermissionSetTypes.PERMISSION_SET))
 @UseInterceptors(InmostTransactionManager)
 @Controller('userPermissions/permissionSet')
 export class PermissionSetController {
-    constructor(private permissionSetService: PermissionSetService) {
-    }
+    constructor(private permissionSetService: PermissionSetService) {}
 
     @ApiOperation({summary: 'Get all Permission Sets.'})
     @ApiResponse({status: HttpStatus.OK, type: [PermissionSetDto], description: 'Create Permission Set.'})

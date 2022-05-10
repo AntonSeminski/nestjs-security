@@ -15,7 +15,6 @@ import {DatabaseConnectionTypeEnum, SessionManagerModule} from "@asemin/nestjs-u
         ObjectModule,
         SessionManagerModule
     ],
-    providers: [MongoPermissionSetManager],
     exports: [MongoPermissionSetManager]
 })
 export class MongoPermissionSetManagerModule {

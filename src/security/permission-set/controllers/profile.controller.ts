@@ -1,16 +1,15 @@
 import {Body, Controller, Get, HttpStatus, Param, Post, UseInterceptors} from "@nestjs/common";
-import {PermissionSetService} from "./permission-set.provider";
-import {PermissionSetDto} from "../../entities/inmost/permission-set/pemrission-set.dto";
-import {PermissionSetAssignmentDto} from "./dtos/permission-set-assignment.dto";
-import {SetTypeInterceptor} from "./interceptors/set-type.interceptor";
-import {PermissionSetTypes} from "../../entities/inmost/permission-set/permissions-set.types";
+import {PermissionSetDto} from "../../../entities";
+import {PermissionSetAssignmentDto} from "../dtos";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {InmostTransactionManager} from "@asemin/nestjs-utils";
+import {ProfileService} from "../services/profile.service";
 
 @ApiTags('UserPermissions / Profile')
-@UseInterceptors(new SetTypeInterceptor(PermissionSetTypes.PROFILE))
+@UseInterceptors(InmostTransactionManager)
 @Controller('userPermissions/profile')
 export class ProfileController {
-    constructor(private permissionSetService: PermissionSetService) {}
+    constructor(private permissionSetService: ProfileService) {}
 
     @ApiOperation({summary: 'Get all Profiles.'})
     @ApiResponse({status: HttpStatus.OK, type: [PermissionSetDto], description: 'Create Profile.'})
