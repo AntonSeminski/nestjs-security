@@ -77,7 +77,7 @@ export const MongoPermissionSetManagerMixin = (type?: PermissionSetTypes): any =
                 {session: this.getSession()}
             );
 
-            return permissionSet ? new PermissionSetDto(permissionSet) : null;
+            return newPermissionSet ? new PermissionSetDto(newPermissionSet) : null;
         }
 
 
