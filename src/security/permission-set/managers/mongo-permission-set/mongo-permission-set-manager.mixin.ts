@@ -3,12 +3,12 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {PermissionSetDto} from "../../../../entities";
 import {PermissionSet} from "../../../../entities";
-import IPermissionSetManager from "../permission-set.manager.interface";
 import {PermissionSetTypes} from "../../../../entities";
 import {ObjectService} from "../../../../common";
 import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
+import IPermissionSetManager from "../permission-set.manager.interface";
 
-export const MongoPermissionSetManager = (type?: PermissionSetTypes): any => {
+export const MongoPermissionSetManagerMixin = (type?: PermissionSetTypes): any => {
 
     @Injectable()
     class MongoPermissionSetManager extends MongoManager implements IPermissionSetManager {
@@ -105,7 +105,7 @@ export const MongoPermissionSetManager = (type?: PermissionSetTypes): any => {
             return permissionSet ? new PermissionSetDto(permissionSet) : null;
         }
 
-        async removeAssignments(permissionSetIds: string, userId: string): Promise<void> {
+        async removeAssignments(permissionSetIds: string[], userId: string): Promise<void> {
             if (isHasEmpty(permissionSetIds, userId)) return null;
 
             await this.permissionSetModel.updateMany(
@@ -116,7 +116,6 @@ export const MongoPermissionSetManager = (type?: PermissionSetTypes): any => {
         }
 
         private createFilterWithType = (filter: any) => this.objectService.addProperty(this.permissionSetType, type, filter);
-
     }
 
     return mixin(MongoPermissionSetManager);

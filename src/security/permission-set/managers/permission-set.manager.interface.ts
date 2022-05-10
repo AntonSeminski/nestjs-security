@@ -1,12 +1,19 @@
-import {PermissionSetDto} from "../../../entities/inmost/permission-set/pemrission-set.dto";
+import {PermissionSetDto} from "../../../entities";
 
 export default interface IPermissionSetManager {
-  getAll();
-  getByName(name: string);
-  getByUserId(userId: string);
+    getAll();
 
-  create(permissionSet: PermissionSetDto);
+    getByName(name: string);
 
-  assignUser(permissionSetId, userId);
-  removeAssignment(permissionSetId, userId);
+    getByUserId(userId: string);
+
+    getIdsByUserId(userId: string);
+
+    create(permissionSet: PermissionSetDto);
+
+    assignUser(permissionSetId: string, userId: string);
+
+    removeAssignment(permissionSetId: string, userId: string);
+
+    removeAssignments(permissionSetIds: string[], userId: string)
 }

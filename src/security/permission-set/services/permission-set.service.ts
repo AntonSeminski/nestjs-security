@@ -1,4 +1,4 @@
-import {PermissionSetProvider} from "./permission-set.provider";
-import {PermissionSetTypes} from "../../../entities";
+import {PermissionSetServiceMixin} from "../permission-set.mixin";
+import {PermissionSetManager} from "../managers";
 
-export class PermissionSetService extends PermissionSetProvider(PermissionSetTypes.PERMISSION_SET) {}
+export class PermissionSetService extends PermissionSetServiceMixin(PermissionSetManager) {}

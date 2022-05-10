@@ -1,24 +1,21 @@
 import {Injectable, mixin} from "@nestjs/common";
-import {PermissionSetManager} from "../managers";
-import {PermissionSetDto, PermissionSetTypes} from "../../../entities";
+import {PermissionSetAllManager} from "./managers";
+import {PermissionSetDto} from "../../entities";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from "@jira-killer/constants";
 
-export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
-    class Manager extends PermissionSetManager(type) {}
+export const PermissionSetServiceMixin = (permissionManager: PermissionSetAllManager): any => {
 
     @Injectable()
     class PermissionSetService {
-        constructor(private permissionSetManager: Manager) {}
-
         async getAll(): Promise<PermissionSetDto[]> {
-            return this.permissionSetManager.getAll();
+            return permissionManager.getAll();
         }
 
         async getByName(name: string): Promise<PermissionSetDto> {
             if (!name) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByName', params: {name: name}})
 
-            return this.permissionSetManager.getByName(name);
+            return permissionManager.getByName(name);
         }
 
         async getByUserId(userId: string): Promise<PermissionSetDto[]> {
@@ -27,7 +24,7 @@ export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
                 params: {userId: userId}
             })
 
-            return this.permissionSetManager.getByUserId(userId);
+            return permissionManager.getByUserId(userId);
         }
 
         async getIdsByUserId(userId: string): Promise<String[]> {
@@ -36,7 +33,7 @@ export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
                 params: {userId: userId}
             })
 
-            return this.permissionSetManager.getIdsByUserId(userId);
+            return permissionManager.getIdsByUserId(userId);
         }
 
         async create(permissionSet: PermissionSetDto): Promise<PermissionSetDto> {
@@ -45,7 +42,7 @@ export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
                 params: {permissionSet: permissionSet}
             })
 
-            return this.permissionSetManager.create(permissionSet);
+            return permissionManager.create(permissionSet);
         }
 
         async assignUser(permissionSetId: string, userId: string): Promise<PermissionSetDto> {
@@ -54,7 +51,7 @@ export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
                 params: {permissionSetId: permissionSetId, userId: userId}
             })
 
-            return this.permissionSetManager.assignUser(permissionSetId, userId);
+            return permissionManager.assignUser(permissionSetId, userId);
         }
 
         async removeAssignment(permissionSetId: string, userId: string): Promise<PermissionSetDto> {
@@ -63,7 +60,7 @@ export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
                 params: {permissionSetId: permissionSetId, userId: userId}
             })
 
-            return this.permissionSetManager.removeAssignment(permissionSetId, userId);
+            return permissionManager.removeAssignment(permissionSetId, userId);
         }
 
         async removeAssignments(permissionSetIds: string[], userId: string): Promise<void> {
@@ -72,7 +69,7 @@ export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
                 params: {permissionSetIds: permissionSetIds, userId: userId}
             })
 
-            return this.permissionSetManager.removeAssignments(permissionSetIds, userId);
+            return permissionManager.removeAssignments(permissionSetIds, userId);
         }
     }
 

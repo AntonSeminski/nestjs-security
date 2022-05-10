@@ -1,4 +1,4 @@
-import {PermissionSetProvider} from "./permission-set.provider";
-import {PermissionSetTypes} from "../../../entities";
+import {PermissionSetServiceMixin} from "../permission-set.mixin";
+import {ProfileManager} from "../managers";
 
-export class ProfileService extends PermissionSetProvider(PermissionSetTypes.PERMISSION_SET) {}
+export class ProfileService extends PermissionSetServiceMixin(ProfileManager) {}
