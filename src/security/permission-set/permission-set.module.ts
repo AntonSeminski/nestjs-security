@@ -1,13 +1,12 @@
 import {Module} from "@nestjs/common";
 import {PermissionSetManagerModule} from "./managers";
-import {ProfileController} from "./controllers/profile.controller";
-import {PermissionSetController} from "./controllers/permission-set.controller";
+import {ProfileController} from "./controllers";
+import {PermissionSetController} from "./controllers";
 import {JwtTokenModule} from "../../services";
 import {SessionManagerModule} from "@asemin/nestjs-utils";
-import {PermissionSetService} from "./services/permission-set.service";
-import {ProfileService} from "./services/profile.service";
-import {PermissionSetProvider} from "./services/permission-set.provider";
-import {PermissionSetAllService} from "./services/permission-set-all.service";
+import {PermissionSetService} from "./services";
+import {ProfileService} from "./services";
+import {PermissionSetAllService} from "./services";
 
 @Module({
     imports: [
@@ -17,6 +16,6 @@ import {PermissionSetAllService} from "./services/permission-set-all.service";
     ],
     controllers: [ProfileController, PermissionSetController],
     providers: [PermissionSetService, ProfileService, PermissionSetAllService],
-    exports: [PermissionSetService, ProfileService, PermissionSetAllService, PermissionSetProvider]
+    exports: [PermissionSetService, ProfileService, PermissionSetAllService]
 })
 export class PermissionSetModule {}
