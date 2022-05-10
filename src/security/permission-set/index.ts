@@ -1,5 +1,4 @@
 export * from './dtos'
-export * from './interceptors'
 export * from './managers'
 
 export * from './controllers/permission-set.controller'

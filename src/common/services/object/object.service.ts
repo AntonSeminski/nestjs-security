@@ -1,6 +1,10 @@
+import {isHasEmpty} from "@asemin/nestjs-utils";
+
 export class ObjectService {
     addProperty = (key, value, objectToAddTo = {}): any => {
-        if (value) objectToAddTo[key] = value;
+        if (isHasEmpty(key, value)) return objectToAddTo;
+
+        objectToAddTo[key] = value;
 
         return objectToAddTo;
     }

@@ -7,6 +7,7 @@ import {SessionManagerModule} from "@asemin/nestjs-utils";
 import {PermissionSetService} from "./services/permission-set.service";
 import {ProfileService} from "./services/profile.service";
 import {PermissionSetProvider} from "./services/permission-set.provider";
+import {PermissionSetAllService} from "./services/permission-set-all.service";
 
 @Module({
     imports: [
@@ -15,7 +16,7 @@ import {PermissionSetProvider} from "./services/permission-set.provider";
         SessionManagerModule
     ],
     controllers: [ProfileController, PermissionSetController],
-    providers: [PermissionSetService, ProfileService],
-    exports: [PermissionSetService, ProfileService, PermissionSetProvider]
+    providers: [PermissionSetService, ProfileService, PermissionSetAllService],
+    exports: [PermissionSetService, ProfileService, PermissionSetAllService, PermissionSetProvider]
 })
 export class PermissionSetModule {}

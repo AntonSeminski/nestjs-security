@@ -4,7 +4,7 @@ import {PermissionSetDto, PermissionSetTypes} from "../../../entities";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from "@jira-killer/constants";
 
-export const PermissionSetProvider = (type: PermissionSetTypes): any => {
+export const PermissionSetProvider = (type?: PermissionSetTypes): any => {
     class Manager extends PermissionSetManager(type) {}
 
     @Injectable()

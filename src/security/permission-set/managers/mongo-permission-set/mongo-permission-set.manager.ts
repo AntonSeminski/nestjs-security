@@ -8,7 +8,7 @@ import {PermissionSetTypes} from "../../../../entities";
 import {ObjectService} from "../../../../common";
 import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
 
-export const MongoPermissionSetManager = (type: PermissionSetTypes): any => {
+export const MongoPermissionSetManager = (type?: PermissionSetTypes): any => {
 
     @Injectable()
     class MongoPermissionSetManager extends MongoManager implements IPermissionSetManager {
