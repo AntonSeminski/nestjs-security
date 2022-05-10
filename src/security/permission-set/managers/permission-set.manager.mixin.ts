@@ -1,4 +1,4 @@
-import {Injectable, mixin} from '@nestjs/common';
+import {Inject, Injectable, mixin} from '@nestjs/common';
 import {PermissionSetDto} from "../../../entities";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from "@jira-killer/constants";
@@ -9,14 +9,16 @@ import {MongoPermissionSetManager} from "./mongo-permission-set";
 export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManager): any => {
     @Injectable()
     class PermissionSetManager implements IPermissionSetManager {
+        @Inject(mongoManager) private mongoManager;
+
         async getAll(): Promise<PermissionSetDto[]> {
-            return mongoManager.getAll();
+            return this.mongoManager.getAll();
         }
 
         async getByName(name: string): Promise<PermissionSetDto> {
             if (!name) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByName', params: {name: name}})
 
-            return mongoManager.getByName(name);
+            return this.mongoManager.getByName(name);
         }
 
         async getByUserId(userId: string): Promise<PermissionSetDto[]> {
@@ -25,7 +27,7 @@ export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManage
                 params: {userId: userId}
             })
 
-            return mongoManager.getByUserId(userId);
+            return this.mongoManager.getByUserId(userId);
         }
 
         getIdsByUserId(userId: string): Promise<String[]> {
@@ -34,7 +36,7 @@ export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManage
                 params: {userId: userId}
             })
 
-            return mongoManager.getIdsByUserId(userId);
+            return this.mongoManager.getIdsByUserId(userId);
         }
 
         async create(permissionSet: PermissionSetDto): Promise<PermissionSetDto> {
@@ -43,7 +45,7 @@ export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManage
                 params: {permissionSet: permissionSet}
             })
 
-            return mongoManager.create(permissionSet);
+            return this.mongoManager.create(permissionSet);
         }
 
 
@@ -53,7 +55,7 @@ export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManage
                 params: {permissionSetId: permissionSetId, userId: userId}
             })
 
-            return mongoManager.assignUser(permissionSetId, userId);
+            return this.mongoManager.assignUser(permissionSetId, userId);
         }
 
         async removeAssignment(permissionSetId: string, userId: string): Promise<PermissionSetDto> {
@@ -62,7 +64,7 @@ export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManage
                 params: {permissionSetId: permissionSetId, userId: userId}
             })
 
-            return mongoManager.removeAssignment(permissionSetId, userId);
+            return this.mongoManager.removeAssignment(permissionSetId, userId);
         }
 
         async removeAssignments(permissionSetIds: string[], userId: string): Promise<void> {
@@ -71,7 +73,7 @@ export const PermissionSetManagerMixin = (mongoManager: MongoPermissionSetManage
                 params: {permissionSetIds: permissionSetIds, userId: userId}
             })
 
-            return mongoManager.removeAssignments(permissionSetIds, userId);
+            return this.mongoManager.removeAssignments(permissionSetIds, userId);
         }
     }
 
