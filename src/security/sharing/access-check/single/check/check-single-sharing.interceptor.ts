@@ -16,7 +16,7 @@ const CheckSingleSharingInterceptor = (requiredAccessLevel: AccessLevels | strin
             const request = context.switchToHttp().getRequest();
 
             if (!hasSingleAccess(request, requiredAccessLevel))
-                throwException(API_ERROR_CODES.RECORD_SECURITY.NO_ACCESS)
+                throwException(API_ERROR_CODES.RECORD_SECURITY.NO_ACCESS);
 
             return next.handle();
         }
