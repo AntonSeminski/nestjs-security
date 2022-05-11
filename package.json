@@ -21,7 +21,7 @@
   "bugs": "https://github.com/",
   "dependencies": {
     "@asemin/nestjs-utils": "^3.0.5",
-    "@jira-killer/constants": "^1.0.11",
+    "@jira-killer/constants": "^1.0.14",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.0.0",
     "@nestjs/mongoose": "^9.0.3",

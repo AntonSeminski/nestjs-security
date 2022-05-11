@@ -7,7 +7,7 @@ import {PermissionTypes} from "@jira-killer/constants";
     },
 })
 export class Permission {
-    @Prop({required: false})
+    @Prop({required: true})
     label: string;
 
     @Prop({required: true})

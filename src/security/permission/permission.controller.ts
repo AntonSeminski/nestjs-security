@@ -29,7 +29,7 @@ export class PermissionController {
 
     @ApiOperation({summary: 'Get all permission assignments for user.'})
     @ApiResponse({type: [PermissionDto]})
-    @Post('get/all/indexes')
+    @Post('get/indexes')
     async getByNames(@Req() request, @Body() indexes: string[]): Promise<PermissionDto[]> {
         return await this.permissionService.getByIndexesAndUser(indexes, request.user);
     }
