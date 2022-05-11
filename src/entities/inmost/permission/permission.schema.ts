@@ -1,5 +1,5 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {PermissionTypes} from "./permission.types";
+import {PermissionTypes} from "@jira-killer/constants";
 
 @Schema({
     toJSON: {

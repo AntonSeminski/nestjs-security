@@ -1,5 +1,5 @@
 import {IsEnum, IsOptional, IsString} from "class-validator";
-import {PermissionTypes} from "../../../entities";
+import {PermissionTypes} from '@jira-killer/constants';
 import {ApiProperty} from "@nestjs/swagger";
 import {RecordDto} from "../../../entities";
 

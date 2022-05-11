@@ -1,4 +1,4 @@
 import {PermissionGuard} from "./permission.guard";
-import {PERMISSION_TYPES} from "../permission";
+import {PermissionTypes} from "@jira-killer/constants";
 
-export const ObjectPermissionGuard: any = (permissionName: string) => PermissionGuard(PERMISSION_TYPES.OBJECT, permissionName);
+export const ObjectPermissionGuard: any = (permissionName: string) => PermissionGuard(PermissionTypes.OBJECT, permissionName);
