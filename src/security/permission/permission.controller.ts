@@ -29,10 +29,10 @@ export class PermissionController {
     }
 
     @ApiOperation({summary: 'Get all permission assignments for user.'})
-    @ApiResponse({type: [PermissionDto]})
+    @ApiResponse({description: 'Returns an object where keys are indexes and values are permissions.'})
     @Post('get/indexes')
-    async getByNames(@Req() request, @Body() indexes: string[]): Promise<PermissionDto[]> {
-        if (!indexes) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {message: "Include array of indexes in Request body."});
+    async getByNames(@Req() request, @Body() indexes: string[]): Promise<any> {
+        if (!indexes) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {message: 'Include array of indexes in Request body.'});
 
         return await this.permissionService.getByIndexesAndUser(indexes, request.user);
     }

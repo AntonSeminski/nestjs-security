@@ -22,10 +22,10 @@ export class PermissionAssignmentController {
     @ApiOperation({summary: 'Get all permission assignments for user.'})
     @ApiResponse({})
     @Get('get/all/user')
-    async getAllByPermissionSets(@Req() request) {
+    async getAllByPermissionSetIds(@Req() request) {
         const userPermissionSets = [...request.user.permissionSets, request.user.profile];
 
-        return await this.permissionAssignmentService.getAllByPermissionSets(userPermissionSets);
+        return await this.permissionAssignmentService.getAllByPermissionSetIds(userPermissionSets);
     }
 
     @ApiOperation({summary: 'Create Permission Assignment.'})

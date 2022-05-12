@@ -12,17 +12,24 @@ export class PermissionAssignmentService {
         return this.permissionAssignmentManager.getAll();
     }
 
-    async getAllByPermissionSets(permissionSets: string[]): Promise<PermissionAssignmentDto[]> {
-        if (!permissionSets) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getAllByPermissionSets', params: {permissionSets: permissionSets}});
+    async getAllByPermissionSetIds(permissionSetIds: string[]): Promise<PermissionAssignmentDto[]> {
+        if (!permissionSetIds) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getAllByPermissionSetIds', params: {permissionSetIds: permissionSetIds}});
 
-        return this.permissionAssignmentManager.getAllByPermissionSets(permissionSets);
+        return this.permissionAssignmentManager.getAllByPermissionSetIds(permissionSetIds);
     }
 
-    async getByPermissionAndPermissionSets(permissionId: string, permissionSetIds: string[]): Promise<PermissionAssignmentDto> {
+    async getByPermissionIdAndPermissionSetIds(permissionId: string, permissionSetIds: string[]): Promise<PermissionAssignmentDto> {
         if (isHasEmpty(permissionId, permissionSetIds))
             throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByPermissionAndPermissionSets', params: {permissionId: permissionId, permissionSetIds: permissionSetIds}});
 
-        return this.permissionAssignmentManager.getByPermissionAndPermissionSets(permissionId, permissionSetIds);
+        return this.permissionAssignmentManager.getByPermissionIdAndPermissionSetIds(permissionId, permissionSetIds);
+    }
+
+    async getByPermissionIdsAndPermissionSetIds(permissionIds: string[], permissionSetIds: string[]): Promise<PermissionAssignmentDto[]> {
+        if (isHasEmpty(permissionIds, permissionSetIds))
+            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByPermissionAndPermissionSets', params: {permissionId: permissionIds, permissionSetIds: permissionSetIds}});
+
+        return this.permissionAssignmentManager.getByPermissionIdsAndPermissionSetIds(permissionIds, permissionSetIds);
     }
 
     async create(permissionAssignment: PermissionAssignmentDto): Promise<PermissionAssignmentDto> {

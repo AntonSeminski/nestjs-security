@@ -22,14 +22,14 @@ export class PermissionService {
         if (!user) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getAllForUser', params: {user: user}});
 
         const userPermissionSets = [...user.permissionSets, user.profile];
-        const allAssignments = await this.permissionAssignmentService.getAllByPermissionSets(userPermissionSets);
+        const allAssignments = await this.permissionAssignmentService.getAllByPermissionSetIds(userPermissionSets);
 
         const permissionIds = allAssignments.map(assignment => assignment.permission);
 
         return this.getAllByIds(permissionIds);
     }
 
-    async getByIndexesAndUser(indexes: string[], user: UserInfoDto): Promise<PermissionDto[]> {
+    async getByIndexesAndUser(indexes: string[], user: UserInfoDto): Promise<any> {
         if (isHasEmpty(indexes, user)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByIndexesAndUser', params: {indexes: indexes, user: user}});
 
         const userPermissionSets = [...user.permissionSets, user.profile];
@@ -37,7 +37,7 @@ export class PermissionService {
         if (userPermissionSets.length === 0)
             return [];
 
-        const allAssignments = (await this.permissionAssignmentService.getAllByPermissionSets(userPermissionSets));
+        const allAssignments = await this.permissionAssignmentService.getAllByPermissionSetIds(userPermissionSets);
 
         if (!allAssignments || allAssignments.length === 0)
             return [];
@@ -48,7 +48,15 @@ export class PermissionService {
         if (!allPermissions)
             return [];
 
-        return allPermissions.filter(permission => indexes.includes(permission.index));
+        const result = {}; // { index: permission }
+
+        allPermissions
+            .filter(permission => indexes.includes(permission.index))
+            ?.forEach(permission => {
+                result[permission.index] = permission;
+            });
+
+        return result;
     }
 
     async getAllByIds(ids: string[]): Promise<PermissionDto[]> {

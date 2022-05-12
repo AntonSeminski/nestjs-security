@@ -20,7 +20,7 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
         return allPermissions?.map(permission => new PermissionAssignmentDto(permission));
     }
 
-    async getAllByPermissionSets(permissionSets: string[]): Promise<PermissionAssignmentDto[]> {
+    async getAllByPermissionSetIds(permissionSets: string[]): Promise<PermissionAssignmentDto[]> {
         if (!permissionSets) return null;
 
         let permissionAssignments = await this.permissionAssignmentModel
@@ -30,7 +30,7 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
         return permissionAssignments?.map(permissionAssignment => new PermissionAssignmentDto(permissionAssignment));
     }
 
-    async getByPermissionAndPermissionSets(permissionId: string, permissionSetIds: string[]): Promise<PermissionAssignmentDto> {
+    async getByPermissionIdAndPermissionSetIds(permissionId: string, permissionSetIds: string[]): Promise<PermissionAssignmentDto> {
         if (isHasEmpty(permissionId, permissionSetIds)) return null;
 
         const permissionAssignment = await this.permissionAssignmentModel
@@ -43,17 +43,17 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
         return permissionAssignment ? new PermissionAssignmentDto(permissionAssignment) : null;
     }
 
-    async isExist(permissionSetId: string, permissionId: string): Promise<boolean>{
-        if (isHasEmpty(permissionId, permissionSetId)) return null;
+    async getByPermissionIdsAndPermissionSetIds(permissionIds: string[], permissionSetIds: string[]): Promise<PermissionAssignmentDto[]> {
+        // if (isHasEmpty(permissionIds, ...permissionSetIds)) throwEmptyParam(null);
 
-        const permissionAssignment = await this.permissionAssignmentModel
+        const permissionAssignments = await this.permissionAssignmentModel
             .find({
-                permission: permissionId,
-                permissionSet: permissionSetId
+                permission: {$in: permissionIds},
+                permissionSet: {$in: permissionSetIds}
             })
             .session(this.getSession());
 
-        return !!permissionAssignment;
+        return permissionAssignments?.map(assignment => new PermissionAssignmentDto(assignment));
     }
 
     async create(permission: PermissionAssignmentDto): Promise<PermissionAssignmentDto> {
