@@ -2,9 +2,10 @@ import {Body, Controller, Delete, Get, HttpStatus, Param, Post, Req, UseGuards, 
 import {PermissionService} from "./permission.provider";
 import {PermissionDto} from "./dto";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {InmostTransactionManager} from "@asemin/nestjs-utils";
+import {InmostTransactionManager, throwException} from "@asemin/nestjs-utils";
 import {WorkspaceAuthGuard} from "../../common";
 import {UpdatePermissionDto} from "./dto";
+import {API_ERROR_CODES} from "@jira-killer/constants";
 
 @ApiTags('Permission')
 @UseInterceptors(InmostTransactionManager)
@@ -31,6 +32,8 @@ export class PermissionController {
     @ApiResponse({type: [PermissionDto]})
     @Post('get/indexes')
     async getByNames(@Req() request, @Body() indexes: string[]): Promise<PermissionDto[]> {
+        if (!indexes) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {message: "Include array of indexes in Request body."});
+
         return await this.permissionService.getByIndexesAndUser(indexes, request.user);
     }
 

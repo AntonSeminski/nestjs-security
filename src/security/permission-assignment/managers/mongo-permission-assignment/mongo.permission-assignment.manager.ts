@@ -3,8 +3,8 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import IPermissionAssignmentManager from "../permission-assignment.manager.interface";
 import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
-import {PermissionAssignmentDto} from "../../../../entities/inmost/permission-assignment/permission-assignment.dto";
-import {PermissionAssignment} from "../../../../entities/inmost/permission-assignment/permission-assignment.schema";
+import {PermissionAssignmentDto} from "../../../../entities";
+import {PermissionAssignment} from "../../../../entities";
 
 @Injectable()
 export class MongoPermissionAssignmentManager extends MongoManager implements IPermissionAssignmentManager {
@@ -13,7 +13,9 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
     }
 
     async getAll(): Promise<PermissionAssignmentDto[]> {
-        const allPermissions = await this.permissionAssignmentModel.find({}, {}, {session: this.getSession()})
+        const allPermissions = await this.permissionAssignmentModel
+            .find()
+            .session(this.getSession());
 
         return allPermissions?.map(permission => new PermissionAssignmentDto(permission));
     }
@@ -21,7 +23,9 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
     async getAllByPermissionSets(permissionSets: string[]): Promise<PermissionAssignmentDto[]> {
         if (!permissionSets) return null;
 
-        let permissionAssignments = await this.permissionAssignmentModel.find({$in: {permissionSet: permissionSets}}, {}, {session: this.getSession()})
+        let permissionAssignments = await this.permissionAssignmentModel
+            .find({permissionSet: {$in: permissionSets}})
+            .session(this.getSession());
 
         return permissionAssignments?.map(permissionAssignment => new PermissionAssignmentDto(permissionAssignment));
     }
@@ -29,10 +33,12 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
     async getByPermissionAndPermissionSets(permissionId: string, permissionSetIds: string[]): Promise<PermissionAssignmentDto> {
         if (isHasEmpty(permissionId, permissionSetIds)) return null;
 
-        const permissionAssignment = await this.permissionAssignmentModel.findOne({
-            permission: permissionId,
-            permissionSet: {$in: permissionSetIds}
-        }, {}, {session: this.getSession()});
+        const permissionAssignment = await this.permissionAssignmentModel
+            .findOne({
+                permission: permissionId,
+                permissionSet: {$in: permissionSetIds}
+            })
+            .session(this.getSession());
 
         return permissionAssignment ? new PermissionAssignmentDto(permissionAssignment) : null;
     }
@@ -40,7 +46,12 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
     async isExist(permissionSetId: string, permissionId: string): Promise<boolean>{
         if (isHasEmpty(permissionId, permissionSetId)) return null;
 
-        const permissionAssignment = await this.permissionAssignmentModel.find({permission: permissionId, permissionSet: permissionSetId}, {}, {session: this.getSession()});
+        const permissionAssignment = await this.permissionAssignmentModel
+            .find({
+                permission: permissionId,
+                permissionSet: permissionSetId
+            })
+            .session(this.getSession());
 
         return !!permissionAssignment;
     }
@@ -64,7 +75,9 @@ export class MongoPermissionAssignmentManager extends MongoManager implements IP
     async deleteById(id: string): Promise<boolean> {
         if (isHasEmpty(id)) return false;
 
-        const deletedAssignment = await this.permissionAssignmentModel.findByIdAndDelete(id, {session: this.getSession()});
+        const deletedAssignment = await this.permissionAssignmentModel
+            .findByIdAndDelete(id)
+            .session(this.getSession());
 
         return !!deletedAssignment;
     }

@@ -33,10 +33,20 @@ export class PermissionService {
         if (isHasEmpty(indexes, user)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByIndexesAndUser', params: {indexes: indexes, user: user}});
 
         const userPermissionSets = [...user.permissionSets, user.profile];
-        const allAssignments = await this.permissionAssignmentService.getAllByPermissionSets(userPermissionSets);
+
+        if (userPermissionSets.length === 0)
+            return [];
+
+        const allAssignments = (await this.permissionAssignmentService.getAllByPermissionSets(userPermissionSets));
+
+        if (!allAssignments || allAssignments.length === 0)
+            return [];
 
         const permissionIds = allAssignments.map(assignment => assignment.permission);
         const allPermissions = await this.getAllByIds(permissionIds);
+
+        if (!allPermissions)
+            return [];
 
         return allPermissions.filter(permission => indexes.includes(permission.index));
     }
@@ -81,9 +91,5 @@ export class PermissionService {
         if (isHasEmpty(id)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteById', fields: {id}});
 
         return this.permissionManager.deleteById(id);
-    }
-
-    async init(permissionSetId: string) {
-
     }
 }
