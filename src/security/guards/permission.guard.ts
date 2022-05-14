@@ -22,7 +22,7 @@ export const PermissionGuard: any = (type: string, permissionName: string) => {
             const permission = await this.permissionService.getByNameAndType(permissionName, type);
             if (!permission) throwException(API_ERROR_CODES.PERMISSION.NOT_FOUND);
 
-            const hasPermission = this.permissionAssignmentService.getByPermissionIdAndPermissionSetIds(permission._id, permissionSets);
+            const hasPermission = await this.permissionAssignmentService.getByPermissionIdAndPermissionSetIds(permission._id, permissionSets);
             if (!hasPermission)
                 throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE)
 
