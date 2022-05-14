@@ -14,7 +14,7 @@ export const PermissionGuard: any = (type: string, permissionName: string) => {
 
         async canActivate(context: ExecutionContext): Promise<boolean> {
             const request = context.switchToHttp().getRequest();
-            const permissionSets = await AuthInfo.getPermissionSets(request);
+            const permissionSets = await AuthInfo.getAllPermissionSets(request);
 
             if (!permissionSets)
                 throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE);
