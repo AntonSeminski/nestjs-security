@@ -1,18 +1,18 @@
-import {SystemPermissionNames, PermissionTypes} from "@jira-killer/constants";
+import {ESystemPermissionNames, EPermissionTypes} from "@jira-killer/constants";
 
 export const DEFAULT_WORKSPACE_PERMISSIONS = [
     {
         label: "Invite Users",
-        apiName: SystemPermissionNames.INVITE,
+        apiName: ESystemPermissionNames.Invite,
         description: "This permission allows to invite users to workspace.",
-        type: PermissionTypes.SYSTEM,
+        type: EPermissionTypes.System,
         volume: ""
     },
     {
         label: "Fire Users",
-        apiName: SystemPermissionNames.FIRE,
+        apiName: ESystemPermissionNames.Fire,
         description: "This permission allows to fire users from workspace.",
-        type: PermissionTypes.SYSTEM,
+        type: EPermissionTypes.System,
         volume: ""
     }
 ]

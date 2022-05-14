@@ -1,5 +1,5 @@
 import {IsEnum, IsNotEmpty, IsOptional, IsString} from "class-validator";
-import {PermissionTypes} from "@jira-killer/constants";
+import {EPermissionTypes} from "@jira-killer/constants";
 import {ApiProperty} from "@nestjs/swagger";
 import {RecordDto} from "../../../entities";
 
@@ -19,7 +19,7 @@ export class PermissionDto extends RecordDto {
     @IsOptional()
     description: string;
 
-    @ApiProperty({enum: PermissionTypes, description: 'Permission Type. Choice is limited!'})
+    @ApiProperty({enum: EPermissionTypes, description: 'Permission Type. Choice is limited!'})
     @IsEnum(PermissionDto)
     @IsNotEmpty()
     type: string;

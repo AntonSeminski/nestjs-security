@@ -2,14 +2,14 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import IPermissionAssignmentManager from "../permission-assignment.manager.interface";
-import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
+import {EDatabaseConnectionType, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
 import {PermissionAssignmentDto} from "../../../../entities";
 import {PermissionAssignment} from "../../../../entities";
 
 @Injectable()
 export class MongoPermissionAssignmentManager extends MongoManager implements IPermissionAssignmentManager {
     constructor(@InjectModel(PermissionAssignment.name) private readonly permissionAssignmentModel: Model<PermissionAssignment>,) {
-        super(DatabaseConnectionTypeEnum.INMOST);
+        super(EDatabaseConnectionType.Inmost);
     }
 
     async getAll(): Promise<PermissionAssignmentDto[]> {

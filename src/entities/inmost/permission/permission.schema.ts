@@ -1,5 +1,4 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {PermissionTypes} from "@jira-killer/constants";
 
 @Schema({
     toJSON: {
@@ -13,7 +12,7 @@ export class Permission {
     @Prop({required: true})
     apiName: string;
 
-    @Prop({enum: PermissionTypes, required: true})
+    @Prop({required: true})
     type: string;
 
     @Prop({})

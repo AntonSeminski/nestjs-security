@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
-import {DatabaseConnectionTypeEnum} from "@asemin/nestjs-utils";
+import {EDatabaseConnectionType} from "@asemin/nestjs-utils";
 import {MongoPermissionAssignmentManager} from "./mongo.permission-assignment.manager";
-import {PermissionAssignment,PermissionAssignmentSchemaMongo} from "../../../../entities/inmost/permission-assignment/permission-assignment.schema";
+import {PermissionAssignment,PermissionAssignmentSchemaMongo} from "../../../../entities";
 
 @Module({
-    imports: [MongooseModule.forFeature([{name: PermissionAssignment.name, schema: PermissionAssignmentSchemaMongo}], DatabaseConnectionTypeEnum.INMOST)],
+    imports: [MongooseModule.forFeature([{name: PermissionAssignment.name, schema: PermissionAssignmentSchemaMongo}], EDatabaseConnectionType.Inmost)],
     providers: [MongoPermissionAssignmentManager],
     exports: [MongoPermissionAssignmentManager]
 })

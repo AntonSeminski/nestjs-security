@@ -1,8 +1,8 @@
 import {CanActivate, ExecutionContext, Injectable, mixin} from "@nestjs/common";
 import {API_ERROR_CODES} from "@jira-killer/constants";
 import {PermissionAssignmentService} from "../permission-assignment";
-import {PermissionService, UserInfoDto} from "../permission";
-import {getAuthInfo, throwException} from "@asemin/nestjs-utils";
+import {PermissionService} from "../permission";
+import {AuthInfo, throwException} from "@asemin/nestjs-utils";
 
 export const PermissionGuard: any = (type: string, permissionName: string) => {
     @Injectable()
@@ -14,9 +14,8 @@ export const PermissionGuard: any = (type: string, permissionName: string) => {
 
         async canActivate(context: ExecutionContext): Promise<boolean> {
             const request = context.switchToHttp().getRequest();
-            const payload: UserInfoDto = await getAuthInfo(request.headers?.authorization);
+            const permissionSets = await AuthInfo.getPermissionSets(request);
 
-            const permissionSets = [...payload.permissionSets, payload.profile];
             if (!permissionSets)
                 throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE);
 

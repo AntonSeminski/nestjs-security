@@ -3,7 +3,7 @@ import {CallHandler, ExecutionContext, Injectable, mixin, NestInterceptor} from 
 import {Observable} from "rxjs";
 import {SharingSecurityService} from "../../../sharing-security.provider";
 import {getIdFromRequest, hasSingleAccess, setSingleAccess} from "../../../utility";
-import {getAuthInfoByName} from "@asemin/nestjs-utils";
+import {AuthInfo} from "@asemin/nestjs-utils";
 
 
 const SingleSharingInterceptor = (accessLevel: AccessLevels | string, shareToName: string, idName: string = ''): any => {
@@ -18,7 +18,7 @@ const SingleSharingInterceptor = (accessLevel: AccessLevels | string, shareToNam
                 return next.handle();
 
             const entityId = getIdFromRequest(request, idName);
-            const shareTo = await getAuthInfoByName(request, shareToName);
+            const shareTo = await AuthInfo.getByName(request, shareToName);
 
             const bestAccess = await this.sharingSecurity.getBestAccess(entityId, shareTo);
 

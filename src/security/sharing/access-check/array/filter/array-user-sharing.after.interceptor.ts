@@ -1,12 +1,11 @@
 import {CallHandler, ExecutionContext, Injectable, mixin, NestInterceptor,} from "@nestjs/common";
-import {AccessLevels, hasAccess} from "../../../../../entities/inmost/sharing/access-level.constants";
-import {hasGlobalAccess} from "../../../utility/access.utility";
+import {AccessLevels, hasAccess} from "../../../../../entities";
+import {hasGlobalAccess} from "../../../utility";
 import {map, Observable} from "rxjs";
 import {SharingSecurityService} from "../../../sharing-security.provider";
 import {API_ERROR_CODES} from '@jira-killer/constants'
-import {throwException} from "@asemin/nestjs-utils";
-import {getAuthInfoByNames} from "@asemin/nestjs-utils";
-import {SHARED_TO_TYPES} from "../../../constants/sharing.constants";
+import {AuthInfo, throwException} from "@asemin/nestjs-utils";
+import {SHARED_TO_TYPES} from "../../../constants";
 
 const ArrayUserSharingFilterInterceptor = (accessLevel: AccessLevels | string, entityIdName: string = '_id'): any => {
     @Injectable()
@@ -24,7 +23,7 @@ const ArrayUserSharingFilterInterceptor = (accessLevel: AccessLevels | string, e
                             return next.handle();
 
                         const entityIds = records.map(record => record[entityIdName])
-                        const allSharedTo = await getAuthInfoByNames(request, Object.values(SHARED_TO_TYPES));
+                        const allSharedTo = await AuthInfo.getByNames(request, Object.values(SHARED_TO_TYPES));
 
                         const bestAccessesByEntity = await this.sharingSecurity.getAllBestAccesses(entityIds, allSharedTo);
 

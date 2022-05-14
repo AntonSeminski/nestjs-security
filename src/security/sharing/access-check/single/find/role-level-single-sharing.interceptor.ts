@@ -3,8 +3,8 @@ import {CallHandler, ExecutionContext, Injectable, mixin, NestInterceptor} from 
 import {SharingSecurityService} from "../../../sharing-security.provider";
 import {Observable} from "rxjs";
 import {getIdFromRequest, hasSingleAccess, setSingleAccess} from "../../../utility";
-import {getAuthInfoByName} from "@asemin/nestjs-utils";
 import {SHARED_TO_TYPES} from "../../../constants";
+import {AuthInfo} from "@asemin/nestjs-utils";
 
 const RoleLevelSingleSharingInterceptor = (accessLevel: AccessLevels | string, idName: string = ''): any => {
     @Injectable()
@@ -19,7 +19,7 @@ const RoleLevelSingleSharingInterceptor = (accessLevel: AccessLevels | string, i
                 return next.handle();
 
             const entityId = getIdFromRequest(request, idName);
-            const roleLevel = await getAuthInfoByName(request, SHARED_TO_TYPES.ROLE_LEVEL);
+            const roleLevel = await AuthInfo.getByName(request, SHARED_TO_TYPES.ROLE_LEVEL);
 
             const bestAccess = await this.sharingSecurity.getRoleBestAccess(entityId, roleLevel);
 

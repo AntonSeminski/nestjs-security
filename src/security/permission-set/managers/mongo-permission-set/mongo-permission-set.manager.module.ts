@@ -1,9 +1,8 @@
 import {Module} from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
-import {MongoPermissionSetManagerMixin} from './mongo-permission-set-manager.mixin';
-import {PermissionSet,PermissionSetSchemaMongo} from "../../../../entities/inmost/permission-set/permissions-set.schema";
-import {ObjectModule} from "../../../../services/object/object.module";
-import {DatabaseConnectionTypeEnum, SessionManagerModule} from "@asemin/nestjs-utils";
+import {PermissionSet,PermissionSetSchemaMongo} from "../../../../entities";
+import {ObjectModule} from "../../../../services";
+import {EDatabaseConnectionType, SessionManagerModule} from "@asemin/nestjs-utils";
 import {MongoPermissionSetAllManager, MongoPermissionSetManager, MongoProfileManager} from "./services";
 
 @Module({
@@ -11,7 +10,7 @@ import {MongoPermissionSetAllManager, MongoPermissionSetManager, MongoProfileMan
         MongooseModule.forFeatureAsync([{
                 name: PermissionSet.name,
                 useFactory: () => PermissionSetSchemaMongo
-            }], DatabaseConnectionTypeEnum.INMOST
+            }], EDatabaseConnectionType.Inmost
         ),
         ObjectModule,
         SessionManagerModule

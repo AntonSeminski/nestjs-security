@@ -2,18 +2,17 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import IPermissionManager from "../permission.manager.interface";
-import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager, throwException} from "@asemin/nestjs-utils";
+import {EDatabaseConnectionType, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
 import {PermissionDto} from "../../dto";
 import {UpdatePermissionDto} from "../../dto";
 import {Permission} from "../../../../entities";
-import {API_ERROR_CODES} from "@jira-killer/constants";
 
 @Injectable()
 export class MongoPermissionManager extends MongoManager implements IPermissionManager {
     constructor(
         @InjectModel(Permission.name) private readonly permissionModel: Model<Permission>,
     ) {
-        super(DatabaseConnectionTypeEnum.INMOST);
+        super(EDatabaseConnectionType.Inmost);
     }
 
     async getAll(): Promise<PermissionDto[]> {

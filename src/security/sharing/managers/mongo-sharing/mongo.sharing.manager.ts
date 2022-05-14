@@ -2,8 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import ISharingManager from "../sharing.manager.interface";
-import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager, throwException} from "@asemin/nestjs-utils";
-import {API_ERROR_CODES} from '@jira-killer/constants'
+import {EDatabaseConnectionType, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
 import {SharingDto} from "../../../../entities";
 import {Sharing} from "../../../../entities";
 import {AUTOMATED_SHARING_TYPES} from "../../constants";
@@ -14,7 +13,7 @@ export class MongoSharingManager extends MongoManager implements ISharingManager
     constructor(
         @InjectModel(Sharing.name) private readonly sharingModel: Model<Sharing>,
     ) {
-        super(DatabaseConnectionTypeEnum.INMOST);
+        super(EDatabaseConnectionType.Inmost);
     }
 
     async getAll(): Promise<SharingDto[]> {

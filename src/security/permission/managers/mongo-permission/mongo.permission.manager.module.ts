@@ -1,13 +1,13 @@
 import {Module} from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
-import {DatabaseConnectionTypeEnum} from "@asemin/nestjs-utils";
-import {Permission, PermissionSchemaMongo} from "../../../../entities/inmost/permission/permission.schema";
+import {EDatabaseConnectionType} from "@asemin/nestjs-utils";
+import {Permission, PermissionSchemaMongo} from "../../../../entities";
 import {MongoPermissionManager} from "./mongo.permission.manager";
 
 @Module({
     imports: [MongooseModule.forFeature([
             {name: Permission.name, schema: PermissionSchemaMongo}],
-        DatabaseConnectionTypeEnum.INMOST)
+        EDatabaseConnectionType.Inmost)
     ],
     providers: [MongoPermissionManager],
     exports: [MongoPermissionManager]

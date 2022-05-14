@@ -1,6 +1,6 @@
 {
   "name": "@asemin/nestjs-security",
-  "version": "1.0.29",
+  "version": "1.0.31",
   "description": "",
   "author": "Anton Semin <anton.siaminski@gmail.com>",
   "private": false,
@@ -20,7 +20,7 @@
   },
   "bugs": "https://github.com/",
   "dependencies": {
-    "@asemin/nestjs-utils": "^3.0.13",
+    "@asemin/nestjs-utils": "^3.0.23",
     "@jira-killer/constants": "^1.0.19",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.0.0",

@@ -1,17 +1,16 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
-import {Role} from "../../../../entities/inmost/role/role.schema";
+import {Role} from "../../../../entities";
 import IRoleManager from "../role.manager.interface";
-import {RoleDto} from "../../../../entities/inmost/role/role.dto";
-import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
-import {API_ERROR_CODES} from '@jira-killer/constants'
-import {DatabaseConnectionTypeEnum, MongoManager} from "@asemin/nestjs-utils";
+import {RoleDto} from "../../../../entities";
+import {isHasEmpty} from "@asemin/nestjs-utils";
+import {EDatabaseConnectionType, MongoManager} from "@asemin/nestjs-utils";
 
 @Injectable()
 export class MongoRoleManager extends MongoManager implements IRoleManager{
     constructor(@InjectModel(Role.name) private readonly roleModel: Model<Role>) {
-        super(DatabaseConnectionTypeEnum.INMOST);
+        super(EDatabaseConnectionType.Inmost);
     }
 
     async getHierarchy(): Promise<any> {

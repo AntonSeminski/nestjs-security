@@ -4,7 +4,7 @@ import {Model} from 'mongoose';
 import {PermissionSetDto} from "../../../../entities";
 import {PermissionSet} from "../../../../entities";
 import {PermissionSetTypes} from "../../../../entities";
-import {DatabaseConnectionTypeEnum, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
+import {EDatabaseConnectionType, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
 import IPermissionSetManager from "../permission-set.manager.interface";
 import {ObjectService} from "../../../../services";
 
@@ -16,7 +16,7 @@ export const MongoPermissionSetManagerMixin = (type?: PermissionSetTypes): any =
             @InjectModel(PermissionSet.name) private readonly permissionSetModel: Model<PermissionSet>,
             private objectService: ObjectService
         ) {
-            super(DatabaseConnectionTypeEnum.INMOST);
+            super(EDatabaseConnectionType.Inmost);
         }
 
         permissionSetType = 'type';

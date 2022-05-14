@@ -1,6 +1,6 @@
 import {ArgumentMetadata,Inject,Injectable,PipeTransform} from "@nestjs/common";
-import {getAuthInfo} from "@asemin/nestjs-utils";
 import {REQUEST} from "@nestjs/core";
+import {AuthInfo} from "@asemin/nestjs-utils";
 
 @Injectable()
 export class EntityOwnerPipe implements PipeTransform {
@@ -24,7 +24,7 @@ export class EntityOwnerPipe implements PipeTransform {
         const authHeader = this.request.headers.authorization;
         if (!authHeader) return null;
 
-        const accessTokenInfo = await getAuthInfo(authHeader);
+        const accessTokenInfo = await AuthInfo.getAll(this.request);
 
         return accessTokenInfo?._id;
     }
