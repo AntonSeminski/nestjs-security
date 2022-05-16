@@ -6,6 +6,7 @@ import {EDatabaseConnectionType, isHasEmpty, MongoManager} from "@asemin/nestjs-
 import {PermissionDto} from "../../dto";
 import {UpdatePermissionDto} from "../../dto";
 import {Permission} from "../../../../entities";
+import {EPermissionTypes} from "@jira-killer/constants";
 
 @Injectable()
 export class MongoPermissionManager extends MongoManager implements IPermissionManager {
@@ -43,6 +44,26 @@ export class MongoPermissionManager extends MongoManager implements IPermissionM
         const permission = await this.permissionModel.findOne({apiName, type}, {}, {session: this.getSession()});
 
         return permission ? new PermissionDto(permission) : null;
+    }
+
+    async getObjectPermissions(objectName: string): Promise<PermissionDto[]> {
+        if (!objectName) return null;
+
+        const objectPermissions = await this.permissionModel
+            .find({apiName: objectName, type: EPermissionTypes.Object})
+            .session(this.getSession());
+
+        return objectPermissions?.map(permission => new PermissionDto(permission));
+    }
+
+    async getObjectPermissionByValue(objectName: string, value: string): Promise<PermissionDto> {
+        if (isHasEmpty(objectName, value)) return null;
+
+        const objectPermission = await this.permissionModel
+            .findOne({apiName: objectName, value: value, type: EPermissionTypes.Object})
+            .session(this.getSession());
+
+        return  objectPermission ? new PermissionDto(objectPermission) : null;
     }
 
     async create(permission: PermissionDto): Promise<PermissionDto> {

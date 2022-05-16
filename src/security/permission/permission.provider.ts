@@ -77,6 +77,18 @@ export class PermissionService {
         return this.permissionManager.getByNameAndType(apiName, type);
     }
 
+    async getObjectPermissions(objectName: string): Promise<PermissionDto[]> {
+        if (!objectName) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getObjectPermissions', fields: {objectName: objectName}})
+
+        return this.permissionManager.getObjectPermissions(objectName);
+    }
+
+    async getObjectPermissionByValue(objectName: string, value: string): Promise<PermissionDto> {
+        if (isHasEmpty(objectName, value)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getObjectPermissions', fields: {objectName: objectName, value: value}});
+
+        return this.permissionManager.getObjectPermissionByValue(objectName, value);
+    }
+
     async create(permission: PermissionDto): Promise<PermissionDto> {
         if (isHasEmpty(permission)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'create', fields: {permission}});
 

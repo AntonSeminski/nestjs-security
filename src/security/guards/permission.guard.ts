@@ -16,15 +16,13 @@ export const PermissionGuard: any = (type: string, permissionName: string) => {
             const request = context.switchToHttp().getRequest();
             const permissionSets = await AuthInfo.getAllPermissionSets(request);
 
-            if (!permissionSets)
-                throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE);
+            if (!permissionSets) throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE);
 
             const permission = await this.permissionService.getByNameAndType(permissionName, type);
             if (!permission) throwException(API_ERROR_CODES.PERMISSION.NOT_FOUND);
 
             const hasPermission = await this.permissionAssignmentService.getByPermissionIdAndPermissionSetIds(permission._id, permissionSets);
-            if (!hasPermission)
-                throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE)
+            if (!hasPermission) throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE);
 
             return true;
         }
