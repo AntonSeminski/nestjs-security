@@ -102,6 +102,19 @@ export class SharingService {
         return this.sharingManager.deleteAutomatedByEntity(entityId);
     }
 
+    async createAutomatedSharing(entity) {
+        if (!entity?.owner) return;
+
+        const automatedSharing: SharingDto[] = [];
+
+        if (entity.owner)
+            automatedSharing.push(await this.createOwnerSharing(entity, entity.owner));
+        if (entity.roleLevel)
+            automatedSharing.push(await this.createRoleSharing(entity, entity.roleLevel, AccessLevels.EDIT));
+
+        await this.sharingManager.createMany(automatedSharing);
+    }
+
     async createRoleSharing(entity: any, roleLevel: number, accessLevel: AccessLevels | string): Promise<SharingDto> {
         if (isHasEmpty(entity, roleLevel, accessLevel)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'createRoleSharing', params: {entity, roleLevel, accessLevel}});
 

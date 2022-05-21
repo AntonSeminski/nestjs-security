@@ -10,16 +10,6 @@ export class SharingSecurityTrigger {
     async onPost(schemaType: any) {
         const schema = schemaType;
 
-        schema.post('save', async (entity) => {
-            // await this.sharingService.createAutomatedSharing(entity);
-        });
-
-        schema.post('update', async (entity) => {
-            await this.sharingService.deleteAutomatedByEntity(entity._id);
-
-            // await this.sharingService.createAutomatedSharing(entity);
-        });
-
         schema.post('delete', async (entity) => {
             await this.sharingService.deleteAllByEntity(entity._id);
         });

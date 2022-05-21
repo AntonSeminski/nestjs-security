@@ -1,7 +1,7 @@
 import {CanActivate, ExecutionContext, Injectable, mixin} from "@nestjs/common";
 import {API_ERROR_CODES} from "@jira-killer/constants";
 import {PermissionAssignmentService} from "../permission-assignment";
-import {PermissionService} from "../permission";
+import {PermissionProvider} from "../permission";
 import {AuthInfo, throwException} from "@asemin/nestjs-utils";
 
 export const PermissionGuard: any = (type: string, permissionName: string) => {
@@ -9,7 +9,7 @@ export const PermissionGuard: any = (type: string, permissionName: string) => {
     class SystemPermission implements CanActivate {
         constructor(
             private permissionAssignmentService: PermissionAssignmentService,
-            private permissionService: PermissionService
+            private permissionService: PermissionProvider
         ) {}
 
         async canActivate(context: ExecutionContext): Promise<boolean> {

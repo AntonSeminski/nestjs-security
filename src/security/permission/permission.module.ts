@@ -1,9 +1,9 @@
 import {Module} from "@nestjs/common";
 import {PermissionController} from "./permission.controller";
-import {PermissionService} from "./permission.provider";
-import {PermissionManagerModule} from "./managers/permission.manager.module";
-import {PermissionAssignmentModule} from "../permission-assignment/permission-assignment.module";
-import {JwtTokenModule} from "../../services/jwt-token/jwt-token.module";
+import {PermissionProvider} from "./permission.provider";
+import {PermissionManagerModule} from "./managers";
+import {PermissionAssignmentModule} from "../permission-assignment";
+import {JwtTokenModule} from "../../services";
 
 @Module({
     imports: [
@@ -12,7 +12,7 @@ import {JwtTokenModule} from "../../services/jwt-token/jwt-token.module";
         JwtTokenModule
     ],
     controllers: [PermissionController],
-    providers: [PermissionService],
-    exports: [PermissionService]
+    providers: [PermissionProvider],
+    exports: [PermissionProvider]
 })
 export class PermissionModule {}

@@ -2,9 +2,8 @@ import {Injectable} from '@nestjs/common';
 import {MongoSharingManager} from './mongo-sharing';
 import ISharingManager from "./sharing.manager.interface";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
-import {SharingDto} from "../../../entities";
+import {SharingDto, SharingTypes} from "../../../entities";
 import {API_ERROR_CODES} from '@jira-killer/constants'
-import {UpdateSharingDto} from "../dto/update-sharing.dto";
 
 @Injectable()
 export class SharingManager implements ISharingManager {
@@ -16,53 +15,53 @@ export class SharingManager implements ISharingManager {
     }
 
     async getAllByType(type: string): Promise<SharingDto[]> {
-        if (isHasEmpty(type)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getAllByType', params: {type}})
+        if (isHasEmpty(type)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getAllByType', fields: {type}})
 
         return this.mongoSharingManager.getAllByType(type);
     }
 
     async getAllByEntity(entity: string): Promise<SharingDto[]> {
-        if (isHasEmpty(entity)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getAllByEntity', params: {entity}})
+        if (isHasEmpty(entity)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getAllByEntity', fields: {entity}})
 
         return this.mongoSharingManager.getAllByEntity(entity);
     }
 
     async getAllByEntities(entities: string[]): Promise<SharingDto[]> {
-        if (isHasEmpty(entities)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getAllByEntities', params: {entities}})
+        if (isHasEmpty(entities)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getAllByEntities', fields: {entities}})
 
         return this.mongoSharingManager.getAllByEntities(entities);
     }
 
     async getByEntitiesAndShareTo(entities: string[], shareTo: string): Promise<SharingDto[]> {
         if (isHasEmpty(entities, shareTo))
-            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getByEntitiesAndShareTo', params: {entities}})
+            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getByEntitiesAndShareTo', fields: {entities}})
 
         return this.mongoSharingManager.getByEntitiesAndShareTo(entities, shareTo);
     }
 
     async getByEntitiesAndManyShareTo(entities: string[], shareTo: string[]): Promise<SharingDto[]> {
         if (isHasEmpty(entities, shareTo))
-            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByEntitiesAndManyShareTo', params: {entities}})
+            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByEntitiesAndManyShareTo', fields: {entities}})
 
         return this.mongoSharingManager.getByEntitiesAndManyShareTo(entities, shareTo);
     }
 
     async getByEntityAndType(entity: string, type: string): Promise<SharingDto[]> {
         if (isHasEmpty(entity, type))
-            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getByEntityAndType', params: {entity, type}})
+            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getByEntityAndType', fields: {entity, type}})
 
         return this.mongoSharingManager.getByEntityAndType(entity, type);
     }
 
     async getByEntitiesAndType(entities: string[], type: string): Promise<SharingDto[]> {
         if (isHasEmpty(entities, type))
-            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getByEntitiesAndType', params: {entities, type}})
+            throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getByEntitiesAndType', fields: {entities, type}})
 
         return this.mongoSharingManager.getByEntitiesAndType(entities, type);
     }
 
     async getOrgWide(entityName: string): Promise<SharingDto> {
-        if (isHasEmpty(entityName)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'checkOrgWide', params: {entityName}});
+        if (isHasEmpty(entityName)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'checkOrgWide', fields: {entityName}});
 
         return this.mongoSharingManager.getOrgWide(entityName);
     }
@@ -79,27 +78,33 @@ export class SharingManager implements ISharingManager {
         return this.mongoSharingManager.createMany(sharing);
     }
 
-    async update(sharing: UpdateSharingDto): Promise<SharingDto> {
-        if (isHasEmpty(sharing)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'update', params: {sharing}});
+    async update(sharing: SharingDto): Promise<SharingDto> {
+        if (isHasEmpty(sharing)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'update', fields: {sharing}});
 
         return this.mongoSharingManager.update(sharing);
     }
 
     async deleteById(id: string): Promise<boolean> {
-        if (isHasEmpty(id)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteById', params: {id}});
+        if (isHasEmpty(id)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteById', fields: {id}});
 
         return this.mongoSharingManager.deleteById(id);
     }
 
     async deleteAllByEntity(entityId: string): Promise<boolean> {
-        if (isHasEmpty(entityId)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteAllByEntity', params: {entityId}});
+        if (isHasEmpty(entityId)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteAllByEntity', fields: {entityId}});
 
         return this.mongoSharingManager.deleteAllByEntity(entityId);
     }
 
     async deleteAutomatedByEntity(entityId: string): Promise<void> {
-        if (isHasEmpty(entityId)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteAutomatedByEntity', params: {entityId}});
+        if (isHasEmpty(entityId)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'deleteAutomatedByEntity', fields: {entityId}});
 
         return this.mongoSharingManager.deleteAutomatedByEntity(entityId);
+    }
+
+    async deleteByEntityAndType(entityId: string, type: SharingTypes): Promise<void> {
+        if (isHasEmpty(entityId, type)) return;
+
+        return this.mongoSharingManager.deleteByEntityAndType(entityId, type);
     }
 }

@@ -8,10 +8,10 @@ import {CheckSingleSharingInterceptor} from "./check";
 export const SingleSharingSecurity = (accessLevel: AccessLevels | string, entityName: string) =>
     applyDecorators(
         UseInterceptors(
-            OrgWideSecurity(entityName, accessLevel),
-            RoleLevelSingleSharingInterceptor(accessLevel),
-            UserSingleSharingInterceptor(accessLevel),
+            CheckSingleSharingInterceptor(accessLevel),
 
-            CheckSingleSharingInterceptor(accessLevel)
+            UserSingleSharingInterceptor(accessLevel),
+            RoleLevelSingleSharingInterceptor(accessLevel),
+            OrgWideSecurity(entityName, accessLevel),
         )
     );
