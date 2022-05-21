@@ -4,6 +4,7 @@ import {PermissionProvider} from "./permission.provider";
 import {PermissionManagerModule} from "./managers";
 import {PermissionAssignmentModule} from "../permission-assignment";
 import {JwtTokenModule} from "../../services";
+import {PermissionService} from "./permission.service";
 
 @Module({
     imports: [
@@ -12,7 +13,7 @@ import {JwtTokenModule} from "../../services";
         JwtTokenModule
     ],
     controllers: [PermissionController],
-    providers: [PermissionProvider],
-    exports: [PermissionProvider]
+    providers: [PermissionProvider, PermissionService],
+    exports: [PermissionProvider, PermissionService]
 })
 export class PermissionModule {}
