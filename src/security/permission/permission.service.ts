@@ -4,11 +4,14 @@ import {Injectable} from "@nestjs/common";
 import {PermissionDto, UserInfoDto} from "./dto";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from "@jira-killer/constants";
+import {AvailablePermissionDto} from "./dto/available-permission.dto";
+import {PermissionSetAllService} from "../permission-set";
 
 @Injectable()
 export class PermissionService {
-    constructor(private permissionManager: PermissionManager,
-                private permissionAssignmentService: PermissionAssignmentService
+    constructor(
+        private permissionManager: PermissionManager,
+        private permissionAssignmentService: PermissionAssignmentService,
     ) {}
 
     async getAllForUser(user: UserInfoDto): Promise<PermissionDto[]> {
@@ -25,8 +28,29 @@ export class PermissionService {
         return this.permissionManager.getAllByIds(Array.from(permissionIds));
     }
 
+    async getAllByPermissionSetId(permissionSetId: string): Promise<AvailablePermissionDto[]> {
+        if (!permissionSetId) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getAllByPermissionSetId'});
+
+        const assignmentByPermission = new Map<string, string>();
+        let availablePermissions: AvailablePermissionDto[] = [];
+
+        const allAssignments = await this.permissionAssignmentService.getAllByPermissionSetIds([permissionSetId]);
+
+        allAssignments.forEach(permissionAssignment => assignmentByPermission.set(permissionAssignment.permission, permissionAssignment._id));
+
+        const allPermissions = await this.permissionManager.getAll();
+        allPermissions.forEach(permission => {
+            availablePermissions.push({...permission, isAvailable: !!assignmentByPermission.get(permission._id)})
+        });
+
+        return availablePermissions;
+    }
+
     async getByIndexesAndUser(indexes: string[], user: UserInfoDto): Promise<any> {
-        if (isHasEmpty(indexes, user)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method: 'getByIndexesAndUser', params: {indexes: indexes, user: user}});
+        if (isHasEmpty(indexes, user)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
+            method: 'getByIndexesAndUser',
+            params: {indexes: indexes, user: user}
+        });
 
         const userPermissionSets = [...(user.permissionSets ?? []), user.profile];
 
@@ -55,16 +79,22 @@ export class PermissionService {
         return result;
     }
 
-    async getObjectPermissionsForUser(objectName: string, permissionSets: string[]): Promise<PermissionDto[]> {
-        if (!objectName) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getObjectPermissions', fields: {objectName: objectName, permissionSets: permissionSets}})
+    async getObjectPermissionsByPermissionSets(objectName: string, permissionSets: string[]): Promise<PermissionDto[]> {
+        if (!objectName) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
+            method: 'getObjectPermissions',
+            fields: {objectName: objectName, permissionSets: permissionSets}
+        })
 
         const objectPermissions = await this.permissionManager.getObjectPermissions(objectName);
 
-        return this.getAvailablePermissionsForUser(objectPermissions, permissionSets);
+        return this.getAvailablePermissionsByPermissionSets(objectPermissions, permissionSets);
     }
 
-    async getObjectPermissionByValueForUser(objectName: string, value: string, permissionSets: string[]): Promise<PermissionDto> {
-        if (isHasEmpty(objectName, value, permissionSets)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getObjectPermissions', fields: {objectName: objectName, value: value, permissionSets: permissionSets}});
+    async getObjectPermissionByValueForPermissionSets(objectName: string, value: string, permissionSets: string[]): Promise<PermissionDto> {
+        if (isHasEmpty(objectName, value, permissionSets)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
+            method: 'getObjectPermissions',
+            fields: {objectName: objectName, value: value, permissionSets: permissionSets}
+        });
 
         const objectPermission = await this.permissionManager.getObjectPermissionByValue(objectName, value);
 
@@ -74,7 +104,7 @@ export class PermissionService {
         return objectPermission;
     }
 
-    private async getAvailablePermissionsForUser(permissions: PermissionDto[], permissionSets: string[]) {
+    private async getAvailablePermissionsByPermissionSets(permissions: PermissionDto[], permissionSets: string[]) {
         const objectPermissionIds = permissions.map(permission => permission._id);
 
         const permissionById = new Map();

@@ -8,6 +8,7 @@ import {UpdatePermissionDto} from "./dto";
 import {API_ERROR_CODES, EObjectPermissionTypes} from "@jira-killer/constants";
 import {PermissionService} from "./permission.service";
 import {FastifyRequest} from "fastify";
+import {AvailablePermissionDto} from "./dto/available-permission.dto";
 
 @ApiTags('Permission')
 @UseInterceptors(InmostTransactionManager)
@@ -30,6 +31,13 @@ export class PermissionController {
         return await this.permissionService.getAllForUser(request.user)
     }
 
+    @ApiOperation({summary: 'Get all permissions (with true/false flag if available) for permission set.'})
+    @ApiResponse({type: [AvailablePermissionDto]})
+    @Get('get/all/permissionSet/:permissionSetId')
+    async getAllByPermissionSet(@Param('permissionSetId') permissionSetId: string): Promise<AvailablePermissionDto[]> {
+        return await this.permissionService.getAllByPermissionSetId(permissionSetId);
+    }
+
     @ApiOperation({summary: 'Get all permission assignments for user.'})
     @ApiResponse({description: 'Returns an object where keys are indexes and values are permissions.'})
     @Post('get/indexes')
@@ -48,7 +56,7 @@ export class PermissionController {
     ): Promise<PermissionDto[]> {
         const permissionSets = await AuthInfo.getAllPermissionSets(request);
 
-        return await this.permissionService.getObjectPermissionsForUser(objectName, permissionSets);
+        return await this.permissionService.getObjectPermissionsByPermissionSets(objectName, permissionSets);
     }
 
     @ApiOperation({summary: 'Get all permission assignments for user to object and value (read/edit/create/delete).'})
@@ -61,7 +69,7 @@ export class PermissionController {
     ): Promise<PermissionDto> {
         const permissionSets = await AuthInfo.getAllPermissionSets(request);
 
-        return await this.permissionService.getObjectPermissionByValueForUser(objectName, value, permissionSets);
+        return await this.permissionService.getObjectPermissionByValueForPermissionSets(objectName, value, permissionSets);
     }
 
     @ApiOperation({summary: 'Create Permission.'})
