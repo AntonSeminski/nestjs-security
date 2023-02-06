@@ -4,7 +4,7 @@ import {PermissionSetAssignmentDto} from "../dtos";
 import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {EntityOwnerPipe} from "../../../common";
 import {InmostTransactionManager} from "@asemin/nestjs-utils";
-import {PermissionSetService} from "../services/permission-set.service";
+import {PermissionSetService} from "../services";
 
 @ApiTags('UserPermissions / PermissionSet')
 @UseInterceptors(InmostTransactionManager)

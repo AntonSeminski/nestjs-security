@@ -5,6 +5,8 @@ import {PermissionDto} from "../dto";
 import {isHasEmpty, throwException} from "@asemin/nestjs-utils";
 import {API_ERROR_CODES} from '@jira-killer/constants'
 import {UpdatePermissionDto} from "../dto";
+import {AccessLevels} from "../../../entities";
+import {FieldPermissionDto} from "../dto/field-permission.dto";
 
 @Injectable()
 export class PermissionManager implements IPermissionManager {
@@ -39,10 +41,16 @@ export class PermissionManager implements IPermissionManager {
         return this.permissionManager.getObjectPermissions(objectName);
     }
 
-    async getObjectPermissionByValue(objectName: string, value: string): Promise<PermissionDto> {
-        if (isHasEmpty(objectName, value)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getObjectPermissions', fields: {objectName: objectName, value: value}});
+    async getFieldPermissions(objectName: string, fieldNames: Array<string>): Promise<Array<FieldPermissionDto>> {
+        if (isHasEmpty(objectName, fieldNames)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getFieldPermissions'})
 
-        return this.permissionManager.getObjectPermissionByValue(objectName, value);
+        return this.permissionManager.getFieldPermissions(objectName, fieldNames);
+    }
+
+    async getObjectPermissionByAccessLevel(objectName: string, accessLevel: string): Promise<PermissionDto> {
+        if (isHasEmpty(objectName, accessLevel)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {method:'getObjectPermissions', fields: {objectName: objectName, accessLevel: accessLevel}});
+
+        return this.permissionManager.getObjectPermissionByAccessLevel(objectName, accessLevel);
     }
 
     async create(permission: PermissionDto): Promise<PermissionDto> {

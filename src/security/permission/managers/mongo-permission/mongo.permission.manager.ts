@@ -2,11 +2,13 @@ import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import IPermissionManager from "../permission.manager.interface";
-import {EDatabaseConnectionType, isHasEmpty, MongoManager} from "@asemin/nestjs-utils";
+import {EDatabaseConnectionType, isHasEmpty, MongoManager, throwException} from "@asemin/nestjs-utils";
 import {PermissionDto} from "../../dto";
 import {UpdatePermissionDto} from "../../dto";
-import {Permission} from "../../../../entities";
-import {EPermissionTypes} from "@jira-killer/constants";
+import {AccessLevels, Permission} from "../../../../entities";
+import {API_ERROR_CODES, EPermissionTypes} from "@jira-killer/constants";
+import {EObjectAccessType} from "../../../../common/types/object-access.type";
+import {FieldPermissionDto} from "../../dto/field-permission.dto";
 
 @Injectable()
 export class MongoPermissionManager extends MongoManager implements IPermissionManager {
@@ -49,18 +51,40 @@ export class MongoPermissionManager extends MongoManager implements IPermissionM
     async getObjectPermissions(objectName: string): Promise<PermissionDto[]> {
         if (!objectName) return null;
 
+        const objectPermissionTypes = Object.values(EObjectAccessType).map(accessType => `${objectName}.${accessType}`);
         const objectPermissions = await this.permissionModel
-            .find({apiName: objectName, type: EPermissionTypes.Object})
-            .session(this.getSession());
+            .find({
+                apiName: { $in: objectPermissionTypes },
+                type: EPermissionTypes.Object
+            });
 
         return objectPermissions?.map(permission => new PermissionDto(permission));
     }
 
-    async getObjectPermissionByValue(objectName: string, value: string): Promise<PermissionDto> {
-        if (isHasEmpty(objectName, value)) return null;
+    async getFieldPermissions(objectName: string, fieldNames: Array<string>): Promise<Array<FieldPermissionDto>> {
+        if (isHasEmpty(objectName, fieldNames)) return null;
+
+        const fieldPermissionTypes = [];
+
+        fieldNames.forEach(fieldName => {
+            fieldPermissionTypes.push(`${objectName}.${fieldName}.${AccessLevels.READ}`);
+            fieldPermissionTypes.push(`${objectName}.${fieldName}.${AccessLevels.EDIT}`);
+        });
+
+        const fieldPermissions = await this.permissionModel
+            .find({
+                apiName: { $in: fieldPermissionTypes },
+                type: 'Field'
+            });
+
+        return fieldPermissions?.map(fieldPermission => new FieldPermissionDto(fieldPermission));
+    }
+
+    async getObjectPermissionByAccessLevel(objectName: string, accessLevel: string): Promise<PermissionDto> {
+        if (isHasEmpty(objectName, accessLevel)) return null;
 
         const objectPermission = await this.permissionModel
-            .findOne({apiName: objectName, value: value, type: EPermissionTypes.Object})
+            .findOne({apiName: `${objectName}.${accessLevel}`, type: EPermissionTypes.Object})
             .session(this.getSession());
 
         return  objectPermission ? new PermissionDto(objectPermission) : null;

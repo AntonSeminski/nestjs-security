@@ -61,15 +61,15 @@ export class PermissionController {
 
     @ApiOperation({summary: 'Get all permission assignments for user to object and value (read/edit/create/delete).'})
     @ApiResponse({description: 'Returns permission.'})
-    @Post('get/object/:objectName/:value')
-    async getObjectPermissionByValue(
+    @Post('get/object/:objectName/:accessLevel')
+    async getObjectPermissionByAccessLevel(
         @Param('objectName') objectName: string,
-        @Param('value') value: EObjectPermissionTypes,
+        @Param('accessLevel') accessLevel: EObjectPermissionTypes,
         @Req() request: FastifyRequest
     ): Promise<PermissionDto> {
         const permissionSets = await AuthInfo.getAllPermissionSets(request);
 
-        return await this.permissionService.getObjectPermissionByValueForPermissionSets(objectName, value, permissionSets);
+        return await this.permissionService.getObjectPermissionByAccessLevelForPermissionSets(objectName, accessLevel, permissionSets);
     }
 
     @ApiOperation({summary: 'Create Permission.'})

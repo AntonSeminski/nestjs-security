@@ -24,11 +24,7 @@ export class AvailablePermissionDto extends RecordDto {
     @IsNotEmpty()
     type: string;
 
-    @ApiProperty({description: 'Permission volume'})
-    @IsOptional()
-    value?: string;
-
-    @ApiProperty({description: 'Formula field of format: ApiName.Type.Value'})
+    @ApiProperty({description: 'Formula field of format: ApiName.Type'})
     index?: string;
 
     @ApiProperty({description: 'Boolean that states for availability of the permission for permission set.'})
@@ -40,7 +36,6 @@ export class AvailablePermissionDto extends RecordDto {
         this.label = permission?.label;
         this.apiName = permission?.apiName;
         this.type = permission?.type;
-        this.value = permission?.value;
         this.description = permission?.description;
         this.index = permission?.index;
         this.isAvailable = permission?.isAvailable;

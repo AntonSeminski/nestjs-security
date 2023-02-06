@@ -17,14 +17,11 @@ export class Permission {
 
     @Prop({})
     description: string;
-
-    @Prop({})
-    value?: string
 }
 
 export type PermissionDocument = Permission & Document;
 export const PermissionSchemaMongo = SchemaFactory.createForClass(Permission);
 PermissionSchemaMongo.virtual('index').get(function (this: PermissionDocument) {
-    return `${this.apiName}.${this.type}${this.value ? '.' + this.value : ''}`;
+    return `${this.apiName}.${this.type}`;
 })
-PermissionSchemaMongo.index({apiName: 1, type: 1, value: 1}, {unique: true});
+PermissionSchemaMongo.index({apiName: 1, type: 1}, {unique: true});

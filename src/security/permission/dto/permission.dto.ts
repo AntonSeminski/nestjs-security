@@ -24,10 +24,6 @@ export class PermissionDto extends RecordDto {
     @IsNotEmpty()
     type: string;
 
-    @ApiProperty({description: 'Permission volume'})
-    @IsOptional()
-    value?: string;
-
     @ApiProperty({description: 'Formula field of format: ApiName.Type.Value'})
     index?: string;
 
@@ -37,7 +33,6 @@ export class PermissionDto extends RecordDto {
         this.label = permission?.label;
         this.apiName = permission?.apiName;
         this.type = permission?.type;
-        this.value = permission?.value;
         this.description = permission?.description;
         this.index = permission?.index;
     }

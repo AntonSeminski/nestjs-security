@@ -90,13 +90,13 @@ export class PermissionService {
         return this.getAvailablePermissionsByPermissionSets(objectPermissions, permissionSets);
     }
 
-    async getObjectPermissionByValueForPermissionSets(objectName: string, value: string, permissionSets: string[]): Promise<PermissionDto> {
-        if (isHasEmpty(objectName, value, permissionSets)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
+    async getObjectPermissionByAccessLevelForPermissionSets(objectName: string, accessLevel: string, permissionSets: string[]): Promise<PermissionDto> {
+        if (isHasEmpty(objectName, accessLevel, permissionSets)) throwException(API_ERROR_CODES.COMMON.EMPTY_PARAM, {
             method: 'getObjectPermissions',
-            fields: {objectName: objectName, value: value, permissionSets: permissionSets}
+            fields: {objectName: objectName, accessLevel: accessLevel, permissionSets: permissionSets}
         });
 
-        const objectPermission = await this.permissionManager.getObjectPermissionByValue(objectName, value);
+        const objectPermission = await this.permissionManager.getObjectPermissionByAccessLevel(objectName, accessLevel);
 
         const assignment = await this.permissionAssignmentService.getByPermissionIdAndPermissionSetIds(objectPermission._id, permissionSets);
         if (!assignment) throwException(API_ERROR_CODES.PERMISSION.NONE_AVAILABLE);
